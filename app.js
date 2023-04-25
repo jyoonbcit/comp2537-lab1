@@ -58,25 +58,29 @@ app.get('/login', (req, res) => {
 app.use(express.urlencoded({ extended: false })) // built-in express JS function, lets you read username & password fields
 // TODO: find out why we use async here
 app.post('/login', async (req, res) => {
-    // set a global variable to true if the user is authenticated
-    const result = await usersModel.findOne({
-        username: req.body.username
-    })
-    if (result === null) {
-        res.send(`
-        <h1> No such user [1] </h1>
-        `)
-    } else if (bcrypt.compareSync(req.body.password, result.password)) {
-        req.session.GLOBAL_AUTHENTICATED = true;
-        req.session.loggedUsername = req.body.username;
-        req.session.loggedPassword = req.body.password;
-        res.redirect('/');
-    } else {
-        res.send(`
-        <h1> Wrong password [2] </h1>
-        `)
-    }
-});
+    try {
+        // set a global variable to true if the user is authenticated
+        const result = await usersModel.findOne({
+            username: req.body.username
+        })
+        if (result === null) {
+            res.send(`
+            <h1> No such user [1] </h1>
+            `)
+        } else if (bcrypt.compareSync(req.body.password, result?.password)) {
+            req.session.GLOBAL_AUTHENTICATED = true;
+            req.session.loggedUsername = req.body.username;
+            req.session.loggedPassword = req.body.password;
+            res.redirect('/');
+        } else {
+            res.send(`
+            <h1> Wrong password [2] </h1>
+            `)
+        }
+    } catch (err) {
+        console.log(err);
+    }}
+);
 /**
 app.post('/login', (req, res) => {
     if (users.find((user) => user.username === req.body.username && user.password === req.body.password)) {
@@ -123,17 +127,21 @@ app.get('/protectedRoute', authenticatedOnly, (req, res) => {
 
 // For Admins only
 const protectedRouteForAdminsOnlyMiddlewareFunction = async (req, res, next) => {
-    const result = await usersModel.findOne(
-        {
-            username: req.session.loggedUsername
+    try {
+        const result = await usersModel.findOne(
+            {
+                username: req.session.loggedUsername
+            }
+        )
+        if (result?.type != 'administrator') {
+            return res.send(`
+            <h1> You are not an admin </h1>
+            `)
         }
-    )
-    if (result?.type != 'administrator') {
-        return res.send(`
-        <h1> You are not an admin </h1>
-        `)
+        next();
+    } catch (err) {
+        console.log(err);
     }
-    next();
 };
 app.use(protectedRouteForAdminsOnlyMiddlewareFunction);
 
