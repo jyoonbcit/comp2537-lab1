@@ -81,6 +81,12 @@ app.post('/login', async (req, res) => {
         console.log(err);
     }}
 );
+// 404 Handler
+app.get('*', (req, res) => {
+    res.status(404).send(`
+    <h1> Error 404: Page not found. </h1>
+    `);
+});
 /**
 app.post('/login', (req, res) => {
     if (users.find((user) => user.username === req.body.username && user.password === req.body.password)) {
@@ -150,7 +156,7 @@ app.get('/protectedRouteForAdminsOnly', (req, res) => {
     <h1> protectedRouteForAdminsOnly </h1>
     `);
 });
-
+// 404 Handler
 app.get('*', (req, res) => {
     res.status(404).send(`
     <h1> Error 404: Page not found. </h1>
