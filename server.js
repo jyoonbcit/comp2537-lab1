@@ -10,8 +10,7 @@ main().catch(err => console.log(err));
 async function main() {
     await mongoose.connect(`mongodb+srv://${process.env.ATLAS_DB_USER}:${process.env.ATLAS_DB_PASSWORD}@cluster0.e6ipsvv.mongodb.net/sample?retryWrites=true&w=majority`);
     console.log("connected to db");
-    const port = 3000
-    app.listen(port, () => {
-        console.log('Server is running on port 3000')
+    app.listen(process.env.PORT || 3000, () => {
+        console.log('Server is running!')
     })
 }
