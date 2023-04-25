@@ -1,7 +1,7 @@
 // Select the database to use.
 use('sample');
 
-/**
+
 db.w1users.updateOne(
     {
     username: 'user1'
@@ -12,7 +12,7 @@ db.w1users.updateOne(
         }
     }
 )
-*/
+
 
 
 db.w1users.find();

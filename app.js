@@ -64,7 +64,7 @@ app.post('/login', async (req, res) => {
     })
     if (result === null) {
         res.send(`
-        <h1> Login failed </h1>
+        <h1> No such user [1] </h1>
         `)
     } else if (bcrypt.compareSync(req.body.password, result.password)) {
         req.session.GLOBAL_AUTHENTICATED = true;
@@ -73,7 +73,7 @@ app.post('/login', async (req, res) => {
         res.redirect('/');
     } else {
         res.send(`
-        <h1> Login failed </h1>
+        <h1> Wrong password [2] </h1>
         `)
     }
 });
