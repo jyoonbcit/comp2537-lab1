@@ -105,10 +105,19 @@ app.use(authenticatedOnly)
 /**
 app.get('/protectedRoute', authenticatedOnly, authenticationSuccessful); // loads /protectedRoute, runs f1 f2
 */
+
+app.use(express.static('public')) // serves static files from public folder, otherwise error for image
 app.get('/protectedRoute', authenticatedOnly, (req, res) => {
-    res.send(`
-    <h1> protectedRoute </h1>
-    `)
+    // Random number between 1 and 3 (inclusive)
+    const randomImageNumber = Math.floor(Math.random() * 3) + 1;
+    const imageName = `00${randomImageNumber}.png`;
+    HTMLResponse = `
+    <h1> Protected Route </h1> 
+    <br> 
+    <p> Picture ${imageName} </p>
+    <img src="${imageName}" />
+    `;
+    res.send(HTMLResponse)
 }); // loads /protectedRoute, runs f1 f2
 
 
